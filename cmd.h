@@ -17,7 +17,7 @@ class cmd : public QObject
 {
     Q_OBJECT
     QTimer *_timer;
-    FileExplorer _file_explorer;
+    FileExplorer * _file_explorer;
     QVector<Supervisor *> _supervisors;
 
 public:

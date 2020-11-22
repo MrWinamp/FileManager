@@ -64,9 +64,21 @@ void FileExplorer::add(QString name){
 
 FileExplorer::FileExplorer(QObject *parent) : QObject(parent)
 {
-    _timer = new QTimer(this);
-    connect(_timer, SIGNAL(timeout()), this, SLOT(check()));
-    _timer->start(1000);
+}
+
+FileExplorer * FileExplorer::_instance = 0;
+QTimer * FileExplorer::_timer = 0;
+
+FileExplorer * FileExplorer::Instance()
+{
+    if(_instance == 0)
+    {
+        _instance = new FileExplorer;
+        _timer = new QTimer(_instance);
+        connect(_timer, SIGNAL(timeout()), _instance, SLOT(check()));
+        _timer->start(1000);
+    }
+    return _instance;
 }
 
 void FileExplorer::check()
@@ -93,6 +105,7 @@ void FileExplorer::check()
 FileExplorer::~FileExplorer()
 {
 delete _timer;
+delete _instance;
 int size =_vec.size();
 if(size)
     for(int i = 0; i < size; i++)

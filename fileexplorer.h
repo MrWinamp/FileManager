@@ -16,14 +16,8 @@ using namespace std;
 class FileExplorer : public QObject
 {
     Q_OBJECT
-
-    QVector<QFile *> _vec;
-    QVector<int> _size;
-    QVector<bool> _exists;
-    QTimer * _timer;
-
 public:
-    explicit FileExplorer(QObject *parent = nullptr);
+    static FileExplorer * Instance();
     ~FileExplorer();
     void add(QString name);
     void del();
@@ -36,6 +30,14 @@ public:
     bool getExitsts(int i);
     bool write(int i, QString text);
     QString read(int i);
+protected:
+    explicit FileExplorer(QObject *parent = nullptr);
+private:
+    QVector<QFile *> _vec;
+    QVector<int> _size;
+    QVector<bool> _exists;
+    static QTimer * _timer;
+    static FileExplorer * _instance;
 signals:
     void changed(QString name, int size, bool exists);
 

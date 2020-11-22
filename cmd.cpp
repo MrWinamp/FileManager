@@ -5,15 +5,16 @@ cmd::cmd(QObject *parent) : QObject(parent)
     _timer = new QTimer(this);
     connect(_timer, SIGNAL(timeout()), this, SLOT(updateScreen()));
     _timer->start(1000);
+    _file_explorer = FileExplorer::Instance();
 }
 cmd::~cmd()
 {
     delete _timer;
-    int size =_file_explorer.size();
+    int size =_file_explorer->size();
     if(size)
         for(int i = 0; i < size; i++)
         {
-            _file_explorer.del();
+            _file_explorer->del();
         }
     size = _supervisors.size();
     if(size)
@@ -41,7 +42,7 @@ void cmd::in()
         {
             cout << "Enter name of file: ";
             cin >> command;
-            _file_explorer.add(command);
+            _file_explorer->add(command);
         }
         else if(command == "adds")
         {
@@ -64,10 +65,10 @@ void cmd::in()
                 cout << "Enter index file: ";
                 cin >> command;
                 int j = command.toInt();
-                if(j>=0 && j < _file_explorer.size() && !_file_explorer.isEmpty())
+                if(j>=0 && j < _file_explorer->size() && !_file_explorer->isEmpty())
                 {
-                    _supervisors[i]->changeFile(_file_explorer.getName(j), _file_explorer.getSize(j), _file_explorer.getExitsts(j));
-                    QObject::connect(&_file_explorer, SIGNAL(changed(QString, int, bool)), _supervisors[i], SLOT(update(QString, int, bool)));
+                    _supervisors[i]->changeFile(_file_explorer->getName(j), _file_explorer->getSize(j), _file_explorer->getExitsts(j));
+                    QObject::connect(_file_explorer, SIGNAL(changed(QString, int, bool)), _supervisors[i], SLOT(update(QString, int, bool)));
                 }
                 else
                 {
@@ -92,7 +93,7 @@ void cmd::in()
             int i = command.toInt();
             if(i>=0 && i < _supervisors.size() && _supervisors.size() > 0)
             {
-                QObject::disconnect(&_file_explorer, SIGNAL(changed(QString, int, bool)), _supervisors[i], SLOT(update(QString, int, bool)));
+                QObject::disconnect(_file_explorer, SIGNAL(changed(QString, int, bool)), _supervisors[i], SLOT(update(QString, int, bool)));
             }
             else
             {
@@ -104,11 +105,11 @@ void cmd::in()
         }
         else if(command == "rmall")
         {
-            int size =_file_explorer.size();
+            int size =_file_explorer->size();
             if(size)
                 for(int i = 0; i < size; i++)
                 {
-                    _file_explorer.del();
+                    _file_explorer->del();
                 }
             size = _supervisors.size();
             if(size)
@@ -120,9 +121,9 @@ void cmd::in()
             cout << "Enter index: ";
             cin >> command;
             int i = command.toInt();
-            if(i>=0 && i < _file_explorer.size() && !_file_explorer.isEmpty())
+            if(i>=0 && i < _file_explorer->size() && !_file_explorer->isEmpty())
             {
-                _file_explorer.del(i);
+                _file_explorer->del(i);
             }
             else
             {
@@ -155,11 +156,11 @@ void cmd::in()
             cin >> command;
             int i = command.toInt();
             cout << "Enter text: ";
-            if(i>=0 && i < _file_explorer.size() && !_file_explorer.isEmpty())
+            if(i>=0 && i < _file_explorer->size() && !_file_explorer->isEmpty())
             {
                 QTextStream in(stdin);
                 cout << "Enter text: ";
-                _file_explorer.write(i, in.readLine());
+                _file_explorer->write(i, in.readLine());
             }
             else
             {
@@ -174,10 +175,10 @@ void cmd::in()
             cout << "Enter index: ";
             cin >> command;
             int i = command.toInt();
-            if(i>=0 && i < _file_explorer.size() && !_file_explorer.isEmpty())
+            if(i>=0 && i < _file_explorer->size() && !_file_explorer->isEmpty())
             {
                 QTextStream out(stdout);
-                out << _file_explorer.read(i) << endl;
+                out << _file_explorer->read(i) << endl;
                 cout << "Press Enter to continue : ";
                 getch();
             }
@@ -221,10 +222,10 @@ void cmd::out()
     else
         out << "Supervizor vector is empty";
     out << endl << "Files:" << endl;
-    if(!_file_explorer.isEmpty())
-        for(int i = 0; i < _file_explorer.size(); i++)
+    if(!_file_explorer->isEmpty())
+        for(int i = 0; i < _file_explorer->size(); i++)
         {
-            out <<_file_explorer.show(i) << endl;
+            out <<_file_explorer->show(i) << endl;
         }
     else
         out << "File vector is empty" << endl;
