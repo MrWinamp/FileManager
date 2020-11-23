@@ -76,9 +76,9 @@ void FileExplorer::add(QString name){
 
 FileExplorer::FileExplorer(QObject *parent) : QObject(parent)
 {
-    _timer = new QTimer(_instance);
-    connect(_timer, SIGNAL(timeout()), _instance, SLOT(check()));
-    _timer->start(1000);
+    _timer = new QTimer(this);
+    connect(_timer, SIGNAL(timeout()), this, SLOT(check()));
+    _timer->start(500);
 }
 
 FileExplorer * FileExplorer::_instance = 0;

@@ -9,7 +9,7 @@ Widget::Widget(QWidget *parent)
     _file_explorer = FileExplorer::Instance();
     _timer = new QTimer(this);
     connect(_timer, SIGNAL(timeout()), this, SLOT(updateScreen()));
-    _timer->start(1000);
+    _timer->start(500);
 
     connect(ui->addFile,SIGNAL(clicked()),this,SLOT(handleAddFile()));
     connect(ui->lineEdit,SIGNAL(returnPressed()),this,SLOT(handleAddFile()));
@@ -50,7 +50,7 @@ Widget::~Widget()
             delete _supervisors[0];
             _supervisors.removeFirst();
         }
-    //_file_explorer->delInstance();
+    _file_explorer->delInstance();
 }
 
 void Widget::updateScreen()
@@ -73,8 +73,6 @@ void Widget::updateScreen()
         }
     else
         ui->listWidget_2->addItem("Supervizor vector is empty");
-    ui->listWidget->addItem(QString::number(_file_explorer->size()));
-    //_file_explorer->check();
 }
 
 void Widget::handleAddFile()
