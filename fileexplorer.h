@@ -10,6 +10,7 @@
 #include "iostream"
 #include <QTextStream>
 #include <conio.h>
+#include <QFileInfo>
 
 using namespace std;
 
@@ -18,6 +19,7 @@ class FileExplorer : public QObject
     Q_OBJECT
 public:
     static FileExplorer * Instance();
+    void delInstance();
     ~FileExplorer();
     void add(QString name);
     void del();
@@ -36,7 +38,7 @@ private:
     QVector<QFile *> _vec;
     QVector<int> _size;
     QVector<bool> _exists;
-    static QTimer * _timer;
+    QTimer * _timer;
     static FileExplorer * _instance;
 signals:
     void changed(QString name, int size, bool exists);

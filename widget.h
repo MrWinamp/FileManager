@@ -24,8 +24,6 @@ class Widget : public QWidget
 public:
     Widget(QWidget *parent = nullptr);
     ~Widget();
-    void in();
-    void out();
 
 private slots:
     void handleAddFile();
