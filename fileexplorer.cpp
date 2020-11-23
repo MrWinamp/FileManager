@@ -36,7 +36,7 @@ void FileExplorer::del()
         delete _vec[_vec.size()-1];
         _vec.remove(_vec.size()-1);
         _size.remove(_size.size()-1);
-        _exists.remove(_vec.size()-1);
+        _exists.remove(_exists.size()-1);
     }
 }
 
@@ -53,32 +53,48 @@ void FileExplorer::del(int i)
 }
 
 void FileExplorer::add(QString name){
+    for(int i = 0; i < _vec.size(); i++)
+        if(QFileInfo(name).absoluteFilePath()==QFileInfo(_instance->getName(i)).absoluteFilePath())
+            return;
     QFile * file;
     file = new QFile(name);
-    file->open(QFile::WriteOnly | QFile::Text);
-    file->close();
-    _vec.append(file);
-    _size.append(file->size());
-    _exists.append(file->exists());
+    if(file->exists())
+    {
+        _vec.append(file);
+        _size.append(file->size());
+        _exists.append(file->exists());
+    }
+    else
+    {
+        file->open(QFile::WriteOnly | QFile::Text);
+        file->close();
+        _vec.append(file);
+        _size.append(file->size());
+        _exists.append(file->exists());
+    }
 }
 
 FileExplorer::FileExplorer(QObject *parent) : QObject(parent)
 {
+    _timer = new QTimer(this);
+    connect(_timer, SIGNAL(timeout()), this, SLOT(check()));
+    _timer->start(500);
 }
 
 FileExplorer * FileExplorer::_instance = 0;
-QTimer * FileExplorer::_timer = 0;
 
 FileExplorer * FileExplorer::Instance()
 {
     if(_instance == 0)
     {
         _instance = new FileExplorer;
-        _timer = new QTimer(_instance);
-        connect(_timer, SIGNAL(timeout()), _instance, SLOT(check()));
-        _timer->start(1000);
     }
     return _instance;
+}
+
+void FileExplorer::delInstance()
+{
+    delete _instance;
 }
 
 void FileExplorer::check()
@@ -105,7 +121,6 @@ void FileExplorer::check()
 FileExplorer::~FileExplorer()
 {
 delete _timer;
-delete _instance;
 int size =_vec.size();
 if(size)
     for(int i = 0; i < size; i++)

@@ -55,3 +55,8 @@ Supervisor::~Supervisor()
 {
 
 }
+
+QString Supervisor::getName()
+{
+    return _name;
+}
