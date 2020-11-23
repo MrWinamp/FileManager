@@ -36,7 +36,7 @@ void FileExplorer::del()
         delete _vec[_vec.size()-1];
         _vec.remove(_vec.size()-1);
         _size.remove(_size.size()-1);
-        _exists.remove(_vec.size()-1);
+        _exists.remove(_exists.size()-1);
     }
 }
 
@@ -53,6 +53,9 @@ void FileExplorer::del(int i)
 }
 
 void FileExplorer::add(QString name){
+    for(int i = 0; i < _vec.size(); i++)
+        if(_instance->getName(i)==name)
+            return;
     QFile * file;
     file = new QFile(name);
     file->open(QFile::WriteOnly | QFile::Text);

@@ -24,6 +24,7 @@ public:
     Supervisor(QString name, int size, bool exists);
     ~Supervisor();
     QString show();
+    QString getName();
     void changeFile(QString name, int size, bool exists);
 
 public slots:
